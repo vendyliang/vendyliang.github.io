@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隨機料理選擇器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e9f7ef;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            min-height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>隨機料理選擇器</h1>
+        
+        <div class="input-group">
+            <label for="cuisine1">料理 1:</label>
+            <input type="text" id="cuisine1" value="美式">
+        </div>
+        
+        <div class="input-group">
+            <label for="cuisine2">料理 2:</label>
+            <input type="text" id="cuisine2" value="地中海料理">
+        </div>
+        
+        <div class="input-group">
+            <label for="cuisine3">料理 3:</label>
+            <input type="text" id="cuisine3" value="索馬利亞料理">
+        </div>
+        
+        <div class="input-group">
+            <label for="cuisine4">料理 4:</label>
+            <input type="text" id="cuisine4" value="墨西哥菜">
+        </div>
+        
+        <div class="input-group">
+            <label for="cuisine5">料理 5:</label>
+            <input type="text" id="cuisine5" value="義大利菜">
+        </div>
+        
+        <div class="input-group">
+            <label for="cuisine6">料理 6:</label>
+            <input type="text" id="cuisine6" value="古巴料理">
+        </div>
+        
+        <button onclick="randomCuisine()">隨機選擇</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // 儲存料理選項
+        function saveOptions() {
+            const cuisines = [];
+            for (let i = 1; i <= 6; i++) {
+                cuisines.push(document.getElementById('cuisine' + i).value);
+            }
+            localStorage.setItem('cuisines', JSON.stringify(cuisines));
+        }
+        
+        // 載入儲存的料理選項
+        function loadOptions() {
+            const savedCuisines = localStorage.getItem('cuisines');
+            if (savedCuisines) {
+                const cuisines = JSON.parse(savedCuisines);
+                for (let i = 1; i <= 6; i++) {
+                    const input = document.getElementById('cuisine' + i);
+                    if (input && cuisines[i-1]) {
+                        input.value = cuisines[i-1];
+                    }
+                }
+            }
+        }
+        
+        // 隨機選擇料理
+        function randomCuisine() {
+            saveOptions(); // 每次選擇前先儲存
+            
+            const cuisines = [];
+            for (let i = 1; i <= 6; i++) {
+                const cuisine = document.getElementById('cuisine' + i).value;
+                if (cuisine.trim() !== '') {
+                    cuisines.push(cuisine);
+                }
+            }
+            
+            if (cuisines.length === 0) {
+                document.getElementById('result').textContent = '請輸入至少一種料理';
+                return;
+            }
+            
+            const randomIndex = Math.floor(Math.random() * cuisines.length);
+            document.getElementById('result').textContent = cuisines[randomIndex];
+        }
+        
+        // 頁面載入時讀取儲存的資料
+        window.onload = loadOptions;
+        
+        // 當輸入框內容改變時自動儲存
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', saveOptions);
+        });
+    </script>
+</body>
+</html>
